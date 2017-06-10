@@ -1,0 +1,24 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "node application to read request from command line and return back the data",
+  "main": "liri.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XiaoyingWen/liri-node-app.git"
+  },
+  "author": "xiaoying wen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XiaoyingWen/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/XiaoyingWen/liri-node-app#readme",
+  "dependencies": {
+    "node-spotify-api": "^1.0.5",
+    "request": "^2.81.0",
+    "twitter": "^1.7.0"
+  }
+}
