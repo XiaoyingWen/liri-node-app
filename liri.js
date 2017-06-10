@@ -1,15 +1,20 @@
 //grab the data from keys.js. 
 //Then store the keys in a variable.
-//TODO
-//var twitterkeys = require('./keys');
-//console.log(twitterkeys.consumer_key);
+var twitterkeys = require('./keys');
+var Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
+var request = require("request");
+
+var spotify = new Spotify({
+	id: 'ee61dd3494ad4f71b00bed802a988cba',
+	secret: 'f4451a1cb55a4550a836a6ea0b798a97'
+});
 
 var command = process.argv[2];
 var param;
 if(command === "movie-this" || command === "spotify-this-song"){
 	param = process.argv[3];
 }
-//console.log("do this: " + command + " " + param + ":");
 
 //take in one of the following commands:
 switch (command) {
@@ -17,7 +22,6 @@ switch (command) {
   	getMyTweets();
     break;
   case "spotify-this-song":
-  	console.log(param);
   	getSong(param);
   	break;
   case "movie-this":
@@ -32,15 +36,7 @@ switch (command) {
 // show your last 20 tweets and when they 
 // were created at in your terminal/bash window
 function getMyTweets(){
-	var Twitter = require('twitter');
-	 
-	var client = new Twitter({
-	  consumer_key: 'GKnV1PJLsPzQlmTrd9mrL0Ucc',
-	  consumer_secret: '2wpLfgaA8QLmwdBqHrfUXOPtopAmZBpnSrdFJHojEoEbYF5mDP',
-	  access_token_key: '872768044371763204-NiO31WsnIMZOlTRQTWBf28zasm1dYM8',
-	  access_token_secret: 'djsyUF11IHDsWUHrmRa1MShhLCRHUo6KBMAFRcYDjQFf4',
-	});
-	 
+	var client = new Twitter(twitterkeys.twitterKeys);
 	var params = {count: '20'};
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 	  if (!error) {
@@ -52,7 +48,6 @@ function getMyTweets(){
 	});
 }
 
-
 // spotify-this-song '<song name here>'
 // This will show the following information about 
 // Artist(s)
@@ -63,13 +58,8 @@ function getMyTweets(){
 //Note the song name needs to be given with double quotes if it contains space
 //e.g. Twinkle, Twinkle, Little Star
 function getSong(name){
-	var Spotify = require('node-spotify-api');
 	var lookupSongName = name || "The Sign";
-	var spotify = new Spotify({
-	  id: 'ee61dd3494ad4f71b00bed802a988cba',
-	  secret: 'f4451a1cb55a4550a836a6ea0b798a97'
-	});
-	 
+
 	spotify.search({ type: 'track', query: lookupSongName }, function(err, data) {
 	  if (err) {
 	    return console.log('Error occurred: ' + err);
@@ -104,7 +94,6 @@ function getSong(name){
 //   * Rotten Tomatoes URL.
 // If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody'
 function getMovie(name){
-	var request = require("request");
 	var lookupMovieName = name || "Mr. Nobody";
 	request('http://www.omdbapi.com/?t='
 		+ lookupMovieName + '"&type=movie&plot=short&r=json&i=tt3896198&apikey=40e9cece', function(error, response, body) {
@@ -133,33 +122,6 @@ function getMovie(name){
 // and then use it to call one of LIRI's commands.
 // It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
 // Feel free to change the text in that document to test out the feature for other commands.
-//TODO fix the issue that the command does not work
-/*var fs  = require("fs");
-var array = fs.readFileSync('./random.txt').toString().split('\n');
-var n = array[0].indexOf(",");
-var command = "";
-var param;
-if (n === -1) {
-	command = array[0];
-} else {
-	command = array[0].substring(0, n);
-	param = array[0].substring(n+1);
-}
-getSong(param);
-console.log(command + " " + param + ":");
-switch (command) {
-  case "movie-this":
-    getMovie(param);
-    break;
-  case "spotify-this-song":
-  	console.log(param);
-  	getSong(param);
-  	break;
-  case "my-tweets":
-  	getMyTweets();
-    break;
-}
-*/
 function doWhatItSays(){
 	fs = require("fs");
 	fs.readFile('./random.txt', function (err, data) {
